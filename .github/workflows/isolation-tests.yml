@@ -1,0 +1,23 @@
+name: Cross-Tenant Isolation Gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  isolation:
+    name: Tenant isolation tests (CI gate)
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL_DIRECT: ${{ secrets.DATABASE_URL_DIRECT }}
+      APP_ROLE_PASSWORD: ${{ secrets.APP_ROLE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Run isolation tests
+        run: npx tsx --test tests/tenant-isolation.test.ts

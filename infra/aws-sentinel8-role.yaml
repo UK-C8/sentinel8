@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Sentinel8 read-only scanner role.
+  Deploy this in the AWS account you want Sentinel8 to scan.
+  After deployment, copy the RoleArn output and paste it into Sentinel8.
+
+Parameters:
+  Sentinel8AccountId:
+    Type: String
+    Description: Sentinel8's AWS account ID (provided by Centr8)
+  ExternalId:
+    Type: String
+    Description: ExternalId from Sentinel8 connector setup (prevents confused-deputy attacks)
+
+Resources:
+  Sentinel8ScannerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Sentinel8ScannerRole
+      Description: Read-only role assumed by Sentinel8 for security scanning
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${Sentinel8AccountId}:root"
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref ExternalId
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+        - arn:aws:iam::aws:policy/AWSConfigReadOnlyAccess
+      MaxSessionDuration: 3600
+      Tags:
+        - Key: ManagedBy
+          Value: Sentinel8
+        - Key: Purpose
+          Value: SecurityScanning
+
+Outputs:
+  RoleArn:
+    Value: !GetAtt Sentinel8ScannerRole.Arn
+    Description: >
+      Paste this ARN into Sentinel8 to complete the AWS connector setup.
+      Do NOT share this ARN publicly.

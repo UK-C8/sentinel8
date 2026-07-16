@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/schedule-scans",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/uptime-ping",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}
