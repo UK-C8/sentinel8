@@ -1,5 +1,9 @@
 import pool from "@/lib/db";
 
+// Live DB-backed dashboard — never statically prerender (would freeze
+// data at build time and require a DB connection during the build step).
+export const dynamic = "force-dynamic";
+
 async function getData() {
   const [jobs, findings, counts, cost] = await Promise.all([
     pool.query(`
