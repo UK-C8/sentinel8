@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/uptime-ping",
-      "schedule": "*/5 * * * *"
+      "schedule": "30 2 * * *"
     }
   ]
 }

@@ -7,3 +7,4 @@ node_modules/
 *.tsbuildinfo
 workers/__pycache__/
 workers/**/__pycache__/
+.env*
